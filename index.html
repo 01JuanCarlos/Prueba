@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario Firebase</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+</head>
+<body>
+
+  <h2>Registro de Usuario</h2>
+  <form id="registerForm">
+    <input type="email" id="email" placeholder="Correo" required />
+    <input type="password" id="password" placeholder="Contraseña" required />
+    <button type="submit">Guardar</button>
+  </form>
+  
+  <script type="module">
+    // Importa las funciones necesarias
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+    // Configuración de Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAB80ozEjG4QXKuN9HOUaKta5Dm2EgCLXU",
+      authDomain: "cibertec-app-android-jc.firebaseapp.com",
+      projectId: "cibertec-app-android-jc",
+      storageBucket: "cibertec-app-android-jc.appspot.com",
+      messagingSenderId: "1042802952474",
+      appId: "1:1042802952474:web:0bde4fb836021ae57504a3",
+      measurementId: "G-Q2162TS80F"
+    };
+
+    // Inicializar Firebase y Firestore
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Función para guardar el correo y la contraseña en Firestore sin encriptación
+    async function saveUserToFirestore(email, password) {
+      try {
+        // Guarda en Firestore sin encriptar
+        await addDoc(collection(db, "users"), {
+          email: email,
+          password: password,  // Contraseña sin encriptar
+        });
+        console.log("Usuario guardado con éxito en Firestore");
+      } catch (e) {
+        console.error("Error al guardar en Firestore: ", e);
+      }
+    }
+
+    // Maneja el formulario de envío
+    const form = document.getElementById("registerForm");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      saveUserToFirestore(email, password);
+    });
+  </script>
+
+</body>
+</html>
