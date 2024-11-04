@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <title>Escáner con Icono de Vista</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        #videoContainer {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border-radius: 100%;
+            /* Hace que el contenedor tenga forma de ojo */
+            overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Ajusta el video al contenedor */
+            transform: scaleX(-1);
+            /* Invierte el video para efecto espejo */
+        }
+
+        #eyeIcon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50px;
+            /* Tamaño del icono */
+            height: 50px;
+            /* Tamaño del icono */
+            transform: translate(-50%, -50%);
+            /* Centra el icono */
+            opacity: 0.7;
+            /* Opacidad del icono */
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+    <style>
+        #cont1{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cont1">
+
+        <h2>Escáner con Icono de Vista</h2>
+        <div id="videoContainer">
+            <video id="video" autoplay></video>
+            <img id="eyeIcon" src="https://cdn-icons-png.flaticon.com/512/5807/5807492.png" alt="Icono de Vista"
+                style=" filter: invert(100%);" /> <!-- Icono de ojo -->
+        </div>
+        <button id="captureButton">Capturar</button>
+
+
+    </div>
+    
+    <script>
+        document.getElementById('captureButton').addEventListener('click', () => {
+            Swal.fire({
+                title: '¡Éxito!',
+                text: 'La acción se ha realizado con éxito.',
+                icon: 'success',
+                confirmButtonText: 'Aceptar',
+                timer: 2000,
+                showConfirmButton: true // Muestra el botón de confirmar
+            });
+
+            // Oculta el contenedor de video
+            document.getElementById('cont1').style.display = 'none';
+        });
+    </script>
+    <script>
+        const video = document.getElementById("video");
+        const canvas = document.getElementById("canvas");
+        const captureButton = document.getElementById("captureButton");
+
+        // Acceder a la cámara
+        navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: "user"  // Utilizar la cámara frontal
+            }
+        })
+            .then((stream) => {
+                video.srcObject = stream;
+            })
+            .catch((err) => {
+                console.error("Error al acceder a la cámara: ", err);
+            });
+
+        // Capturar imagen
+        captureButton.addEventListener("click", () => {
+            /*   const context = canvas.getContext("2d");
+               canvas.width = video.videoWidth;
+               canvas.height = video.videoHeight;
+               context.drawImage(video, 0, 0, canvas.width, canvas.height);
+   
+               // Aquí puedes procesar la imagen capturada
+               const imageData = canvas.toDataURL("image/png");
+               console.log(imageData); // Muestra la imagen capturada en formato base64
+   
+               // Para mostrar la imagen capturada (opcional)
+               const img = new Image();
+               img.src = imageData;
+               document.body.appendChild(img);*/
+
+
+        });
+    </script>
+
+</body>
+
+</html>

